@@ -37,13 +37,17 @@ const storeSchema = mongoose.Schema({
   photo: String
 });
 
-storeSchema.pre("save", function(next) {
+storeSchema.pre("save", async function(next) {
   if (!this.isModified("name")) {
     return next();
   }
   this.slug = slug(this.name);
+  const slugRexEx = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, "i");
+  const slugWithRexEx = await this.constructor.find({ slug: slugRexEx });
+  if (slugWithRexEx.length) {
+    this.slug = `${this.slug}-${slugWithRexEx.length + 1}`;
+  }
   next();
-  // TODO make more resiliant so slugs are unique
 });
 
 module.exports = mongoose.model("Store", storeSchema);

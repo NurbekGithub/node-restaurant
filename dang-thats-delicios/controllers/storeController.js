@@ -44,7 +44,7 @@ exports.resize = async (req, res, next) => {
 exports.createStore = async (req, res) => {
   const store = await new Store(req.body).save();
   req.flash("success", `Store ${store.name} successfully created`);
-  res.redirect(`/stores/${store.slug}`);
+  res.redirect(`/store/${store.slug}`);
 };
 
 exports.getStores = async (req, res) => {
@@ -58,7 +58,6 @@ exports.editStore = async (req, res) => {
 };
 
 exports.updateStore = async (req, res) => {
-  console.log(req.body);
   req.body.location.type = "Point";
   const store = await Store.findOneAndUpdate({ _id: req.params.id }, req.body, {
     new: true, // return new store instead of old one, which is default
@@ -66,7 +65,7 @@ exports.updateStore = async (req, res) => {
   }).exec();
   req.flash(
     "success",
-    `Store ${store.name} successfully updated <a href="/stores/${
+    `Store ${store.name} successfully updated <a href="/store/${
       store.slug
     }">View store -<</a>`
   );
