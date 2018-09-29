@@ -2,13 +2,14 @@ const express = require("express");
 const router = express.Router();
 const storeController = require("../controllers/storeController");
 const userController = require("../controllers/userController");
+const authController = require("../controllers/authController");
 
 const { catchErrors } = require("../handlers/errorHandlers");
 
 // Do work here
 router.get("/", catchErrors(storeController.getStores));
 router.get("/stores", storeController.getStores);
-router.get("/add", storeController.addStore);
+router.get("/add", authController.isLoggedIn, storeController.addStore);
 
 router.get("/store/:slug", catchErrors(storeController.getStoreBySlug));
 
@@ -31,7 +32,13 @@ router.get('/tags/:tag', catchErrors(storeController.getStoresByTag));
 
 router.get('/login', userController.loginForm);
 router.get('/register', userController.registerForm);
+router.get('/logout', authController.logout);
 
-router.post('/register', userController.validateRegister);
+router.post('/login', authController.login);
+router.post('/register', 
+  userController.validateRegister,
+  catchErrors(userController.register),
+  authController.login
+);
 
 module.exports = router;
