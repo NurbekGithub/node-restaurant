@@ -2,7 +2,7 @@ mixin loginForm()
   form.form(action='/login' method='POST')
     h2 login
     label(for='email') Email
-    input(id='email' name='email', type='email')
+    input(id='email' name='email', type='email' autofocus)
     label(for='password') Password
     input(id='password' name='password', type='password')
     input.button(type='submit' value='Log in 😵')

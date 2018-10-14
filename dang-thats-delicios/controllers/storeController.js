@@ -54,6 +54,8 @@ exports.getStores = async (req, res) => {
   res.render("stores", { title: "Stores", stores });
 };
 
+
+
 const confirmOwner = (store, user) => {
   if(!store.author.equals(user._id)) {
     throw new Error('You must own a store in order to edit it');
@@ -62,6 +64,7 @@ const confirmOwner = (store, user) => {
 
 exports.editStore = async (req, res) => {
   // find the store
+  console.log(req.params.id);
   const store = await Store.findOne({ _id: req.params.id });
   // Check if user have a permission to edit it
   confirmOwner(store, req.user);
@@ -97,6 +100,13 @@ exports.getStoresByTag = async (req, res, next) => {
   const storesPromise = Store.find({ tags: tagsQuery })
   const [tags, stores] = await Promise.all([tagsPromise, storesPromise]);
   res.render('tags', { tags, title: 'Tags', tag, stores })
+}
+
+exports.heartedStores = async (req, res) => {
+  // find stores which are hearted by the user;
+  const hearts = req.user.hearts.map(obj => obj.toString());
+  const stores = await Store.find({ _id: hearts })
+  res.render('stores', { title: 'stores', stores });
 }
 
 exports.searchStores = async (req, res) => {

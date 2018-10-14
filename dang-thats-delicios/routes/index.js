@@ -51,6 +51,7 @@ router.post('/account/reset/:token',
 );
 
 router.get('/map', storeController.mapPage)
+router.get('/hearts', storeController.heartedStores)
 
 /*
   API
